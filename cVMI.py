@@ -140,3 +140,7 @@ class Run():
         return np.sum(diffud**2)/np.linalg.norm(diffud) + np.sum(difflr**2)/np.linalg.norm(difflr)+(np.max(diffud) + np.max(difflr))**2
         #return np.max(diffud) + np.max(difflr)
         #return SSE/np.linalg.norm(diffud)
+        
+        
+        
+def plot_thing():
