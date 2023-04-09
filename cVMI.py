@@ -2,6 +2,7 @@ class Point():
     def __init__(self,spec, pixpereV, w0, a1, a2, a3):
         self.pixpereV = pixpereV
         self.spec = spec
+        self.streaked = None
         self.xeV = None #goes with spec
         self.w0 = w0
         self.a1 = a1
@@ -74,3 +75,68 @@ class Point():
         spectra_dhwdpix = 1./pixpereV
         spectra_hws_eV = spectra_hw0 + spectra_dhwdpix*(pixel -spectra_pix0)
         return spectra_hws_eV
+
+
+    
+class Run():
+    def __init__(self,runnum, center, stretch):
+        self.runnum = runnum
+        self.points = get_points(self)
+        self.calibration = None
+        self.center = center #[x,y]? 
+        if stretch = True: 
+            self.stretch_matrix = get_stretch_matrix(512-self.center[0], 512-self.center[1])
+        else: 
+            self.stretch_matrix = make_MM([0,0, 0, 0, 0, 0, 0, 0, 512-self.center[0], 512-self.center[1]]) #make_MM([0,0, 0, 0, 0, 0, 0, 0, 512-535, 512-512])
+        self.bg = None #make the dipole subtracted bg with Tarans code - do you want to do quads?
+        
+    def get_stretch_matrix(self,x0,y0):
+        
+        return make_MM(X)
+    
+    def get_points(self):
+        w0 = 0
+        a1 = 0.5
+        a2 = 0
+        a3 = 0.004
+        for i in range(5):
+            p = Point(sss, pixpereV = 22, w0 = w0, a1 = a1, a2 = a2, a3 = a3)
+            p.make_Qs()
+            
+    def make_bg(self):
+    
+        
+    def calibrate(self):
+        self.calibration = None
+        
+    def generate_vNbases(self):
+        
+    def make_MM(x0):
+        xshift, yshift =  x0[8], x0[9] 
+
+        # Coordinates that you want to Perspective Transform
+        pts1 = np.float32([[0,0],\
+                           [0,1024],\
+                           [1024,0],\
+                           [1024, 1024]])
+
+
+        # Size of the Transformed Image
+        pts2 = np.float32([[0+xshift-x0[0],0 + yshift-x0[1]],\
+                           [0+xshift-x0[2],1024 + yshift-x0[3]],\
+                           [1024+xshift-x0[4],0 + yshift-x0[5]],\
+                           [1024+xshift-x0[6],1024 + yshift-x0[7]]])
+
+        MM = cv2.getPerspectiveTransform(pts1,pts2)
+        return MM
+
+    def MM_error(x0, im):
+        mm = make_MM(x0)
+        imm = cv2.warpPerspective(im,mm,(1024,1024))
+        diffud = rebin(imm*maskhole-np.flipud(imm)*maskhole,4)*2
+        difflr = rebin(imm*maskhole-np.fliplr(imm)*maskhole,4)*2
+        #SSE = np.sum(diffud**2)
+        #return np.sum(diffud**2)/np.linalg.norm(diffud) + np.sum(difflr**2)/np.linalg.norm(difflr)
+        return np.sum(diffud**2)/np.linalg.norm(diffud) + np.sum(difflr**2)/np.linalg.norm(difflr)+(np.max(diffud) + np.max(difflr))**2
+        #return np.max(diffud) + np.max(difflr)
+        #return SSE/np.linalg.norm(diffud)
