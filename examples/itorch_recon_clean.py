@@ -22,7 +22,9 @@ from torchrecon_funcs_clean import *
 import os
 
 
-
+## NEED THE VLS/FZP calibration
+## what is the pixels per eV
+pixpereV = 22
 ####UPDATE FILENAMES##############
 savefiledir = '/reg/d/psdm/tmo/tmox51020/results/paris/recon/torch_test_clean/' #where you are saving the output files
 runnum = 125 #116 
@@ -169,7 +171,7 @@ for k in range(mdat.shape[0]):
             xf = np.arange(-N/2-1/2,N/2-1/2,1)/np.abs(vNaxis['t_sample'][0])/2
             eV = 1239.84*(2*np.pi*xf)/2.9979E8/(2*np.pi)*1e-9 
             #Interpolate spec outside of the loop to match eV axis of the vNbases
-            xeV = pix_2_eV(np.arange(1024), pixpereV = 22, spectra_hw0 = 0, spectra_pix0 = 512)
+            xeV = pix_2_eV(np.arange(1024), pixpereV = pixpereV, spectra_hw0 = 0, spectra_pix0 = 512)
             xeV = xeV - eshift #correction if calibration is off
             f = interp1d(xeV,spec, bounds_error=False, fill_value = 0)
             spec_in = f(eV[1340:-1340])
@@ -231,7 +233,7 @@ for k in range(mdat.shape[0]):
             outdict['mdatname'] = mdatname
             outdict['specdatname'] = specdatname
             outdict['basesdir'] = basesdir
-
+            outdict['pixpereV'] = pixpereV
             
             np.save(savefilename, outdict)
             print('one done')
