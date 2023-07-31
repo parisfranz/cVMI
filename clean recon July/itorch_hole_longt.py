@@ -92,8 +92,10 @@ thresh = 0.0006 #0.0008 #0.00037 #0.0005
 # specdatname = '/cds/home/p/paris/reconVMI_clean/recon X510 Dec/specs_Jul26_127.npy'
 # mdatname='/cds/home/p/paris/reconVMI_clean/recon X510 Dec/Ms_Jul26_127_2.npy'
 # specdatname = '/cds/home/p/paris/reconVMI_clean/recon X510 Dec/specs_Jul26_127_2.npy'
-mdatname='/cds/home/p/paris/reconVMI_clean/recon X510 Dec/Ms_Jul27_112.npy'
-specdatname = '/cds/home/p/paris/reconVMI_clean/recon X510 Dec/specs_Jul27_112.npy'
+# mdatname='/cds/home/p/paris/reconVMI_clean/recon X510 Dec/Ms_Jul27_112.npy'
+# specdatname = '/cds/home/p/paris/reconVMI_clean/recon X510 Dec/specs_Jul27_112.npy'
+mdatname='/cds/home/p/paris/reconVMI_clean/recon X510 Dec/Ms_Jul29_112.npy'
+specdatname = '/cds/home/p/paris/reconVMI_clean/recon X510 Dec/specs_Jul29_112.npy'
 
 
 # mdat= np.load('/cds/home/p/paris/reconVMI_clean/recon X510 Sep/Ms_Oct31.npy', allow_pickle = True)[()]
@@ -194,15 +196,15 @@ Bpi=Variable(Tensor(Bimag))
 
 ############################
 #for k in [14,15,18,19,38,39,58,59]: #range(mdat.shape[0]): #[0,1,2,3,4,5,6,7,40,41,42,43,44,45,46,47,64,65,66,67,68,69,70,71]: #range(119): #range(mdat.shape[0]):
-#for k in range(mdat.shape[0]):
+for k in range(mdat.shape[0]):
 #for k in [  3,   7,  10,  12,  13,  18,  25,  33,  38,  39,  40,  45,  51, 59,  74,  75,  78,  79,  82,  86,  88,  89,  93, 101, 110, 113]: #127
 #for k in [12,13,15,19,28,30,43]: #new 127
 #for k in [7,9,10,12,13,14,17,22,23,29,30,31,32,33,34,37,41,43,46]: #127_2
-for k in [33, 102, 114, 121, 127, 129, 139, 155, 169, 171, 175, 177, 184, 191, 194, 195, 202]: #112
+#for k in [33, 102, 114, 121, 127, 129, 139, 155, 169, 171, 175, 177, 184, 191, 194, 195, 202]: #112
 #for k in np.arange(169,204):
     for t in range(5):
         tt = np.copy(t)
-        savefilename = '/reg/d/psdm/tmo/tmox51020/results/paris/recon/torch_Jul27_112/pytorchrecon_'+str(k)+'_Up'+str(Ups[0])+'_seed'+str(tt)+'.npy'
+        savefilename = '/reg/d/psdm/tmo/tmox51020/results/paris/recon/torch_Jul29_112/pytorchrecon_'+str(k)+'_Up'+str(Ups[0])+'_seed'+str(tt)+'.npy'
         #savefilename = '/reg/d/psdm/tmo/tmox51020/results/paris/recon/torch_Jan12_cal/pytorchrecon_'+str(k)+'_Up'+str(Ups[0])+'_seed'+str(tt)+'.npy'
         if os.path.isfile(savefilename):
             print(savefilename+' exists')
