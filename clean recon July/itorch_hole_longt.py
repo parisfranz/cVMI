@@ -23,7 +23,8 @@ import os
 
 # #######
 Ups = [float(sys.argv[1])]
-eshift = 0 #0 #2 #1 #0 # 3.9/4.8*3 #6/4.02 #0 #4/4.9*3 #0 #opposite sign of dw
+order = float(sys.argv[2])
+eshift = 1 #0 #2 #1 #0 # 3.9/4.8*3 #6/4.02 #0 #4/4.9*3 #0 #opposite sign of dw
 sc = 1 #3.9/4.8 #4.02/4.99 #4/4.9 #3.1/4.8
 #k = 0
 mfn = 0 #25 #25 # 20 #int(sys.argv[5]) #applied to the measured image for preprocessing
@@ -94,9 +95,25 @@ thresh = 0.0006 #0.0008 #0.00037 #0.0005
 # specdatname = '/cds/home/p/paris/reconVMI_clean/recon X510 Dec/specs_Jul26_127_2.npy'
 # mdatname='/cds/home/p/paris/reconVMI_clean/recon X510 Dec/Ms_Jul27_112.npy'
 # specdatname = '/cds/home/p/paris/reconVMI_clean/recon X510 Dec/specs_Jul27_112.npy'
-mdatname='/cds/home/p/paris/reconVMI_clean/recon X510 Dec/Ms_Jul29_112.npy'
-specdatname = '/cds/home/p/paris/reconVMI_clean/recon X510 Dec/specs_Jul29_112.npy'
+# mdatname='/cds/home/p/paris/reconVMI_clean/recon X510 Dec/Ms_Jul29_112.npy'
+# specdatname = '/cds/home/p/paris/reconVMI_clean/recon X510 Dec/specs_Jul29_112.npy'
+# mdatname='/cds/home/p/paris/reconVMI_clean/recon X510 Dec/Ms_Jul30_127.npy'
+# specdatname = '/cds/home/p/paris/reconVMI_clean/recon X510 Dec/specs_Jul30_127.npy'
+# mdatname='/cds/home/p/paris/reconVMI_clean/recon X510 Dec/Ms_Jul31_127.npy'
+# specdatname = '/cds/home/p/paris/reconVMI_clean/recon X510 Dec/specs_Jul31_127.npy'
+# mdatname='/cds/home/p/paris/reconVMI_clean/recon X510 Dec/Ms_Aug1_127.npy'
+# specdatname = '/cds/home/p/paris/reconVMI_clean/recon X510 Dec/specs_Aug1_127.npy'
+# mdatname='/cds/home/p/paris/reconVMI_clean/recon X510 Dec/Ms_Aug3_127.npy'
+# specdatname ='/cds/home/p/paris/reconVMI_clean/recon X510 Dec/specs_Aug3_127.npy'
 
+# mdatname='/cds/home/p/paris/reconVMI_clean/recon X510 Dec/Ms_Aug8_112.npy'
+# specdatname ='/cds/home/p/paris/reconVMI_clean/recon X510 Dec/specs_Aug8_112.npy'
+# mdatname='/cds/home/p/paris/reconVMI_clean/recon X510 Dec/Ms_Aug9_112.npy'
+# specdatname ='/cds/home/p/paris/reconVMI_clean/recon X510 Dec/specs_Aug9_112.npy'
+# mdatname='/cds/home/p/paris/reconVMI_clean/recon X510 Dec/Ms_Aug17_131.npy'
+# specdatname ='/cds/home/p/paris/reconVMI_clean/recon X510 Dec/specs_Aug17_131.npy'
+mdatname='/cds/home/p/paris/reconVMI_clean/recon X510 Dec/Ms_Aug21_131.npy'
+specdatname ='/cds/home/p/paris/reconVMI_clean/recon X510 Dec/specs_Aug21_131.npy'
 
 # mdat= np.load('/cds/home/p/paris/reconVMI_clean/recon X510 Sep/Ms_Oct31.npy', allow_pickle = True)[()]
 # specdat = np.load('/cds/home/p/paris/reconVMI_clean/recon X510 Sep/specs_Oct31.npy', allow_pickle = True)[()]
@@ -114,7 +131,8 @@ PR = PolarRebin('/reg/d/psdm/tmo/tmox51020/results/paris/recon/PR_c32_r32_th32.h
 X,Y=np.meshgrid(np.arange(1024),np.arange(1024))
 rs=np.sqrt((X-512)**2+(Y-512)**2)
 maskhm=np.zeros((1024,1024))
-maskhm[(rs>325-30) & (rs<420)]=1
+maskhm[(rs>325-20) & (rs<420)]=1
+#maskhm[(rs>325-30) & (rs<420)]=1
 #maskhm[(rs>325-30) & (rs<420)]=1
 #maskhm[(rs>325-42/2) & (rs<430+42/2)]=1 #12 eV around where unstreaked photoline is
 #maskhm[(rs>318) & (rs<430+42/2)]=1
@@ -196,15 +214,28 @@ Bpi=Variable(Tensor(Bimag))
 
 ############################
 #for k in [14,15,18,19,38,39,58,59]: #range(mdat.shape[0]): #[0,1,2,3,4,5,6,7,40,41,42,43,44,45,46,47,64,65,66,67,68,69,70,71]: #range(119): #range(mdat.shape[0]):
-for k in range(mdat.shape[0]):
+f#or k in range(mdat.shape[0]):
 #for k in [  3,   7,  10,  12,  13,  18,  25,  33,  38,  39,  40,  45,  51, 59,  74,  75,  78,  79,  82,  86,  88,  89,  93, 101, 110, 113]: #127
 #for k in [12,13,15,19,28,30,43]: #new 127
 #for k in [7,9,10,12,13,14,17,22,23,29,30,31,32,33,34,37,41,43,46]: #127_2
 #for k in [33, 102, 114, 121, 127, 129, 139, 155, 169, 171, 175, 177, 184, 191, 194, 195, 202]: #112
+#for k in [1,3,6,7,8,9,10,12,13,15,16,17,18,19,21,25,31,33,38,39,40,43,45,48,51,54,56,59,60,62,64,65,66,72,73,74,75,76,78,79,82,86,88,89,90,92,93,101,102,107,108,110,112,113,114]: #lots of 127
+#for k in [9,11,12,13,15,16,18,21,22,24,25,27,28,29,30,32,37,38,40,45,50,51,54,58,59,60,62,66,69,71,72,83,85,87,90,93,102,111,120,139,146]: #127 Aug 3
+#for k in [15,24,25,50,58]: #127 Aug 5
 #for k in np.arange(169,204):
+
+#idlist = np.arange(len(mdat))
+#idlist = [0,   1,   2,   4,   5,   6,   7,  10,  11, 13,  15, 17,  18,  19,  20, 21,  22, 25, 26,  27,  29,  30, 32,  33,  34,  35,  36,  37,
+#40,  41,  42,  43, 45,  46,  47, 50,  51, 52,  53,  54,  55,  56,  57,  58, 60,  61,  62,  63,  64,
+# 65,  66,  67,  69,  70,  72,  73,  75,  76,  77,  78, 81,  82, 84,  85,  86,  87,  88,  89,  90,
+# 91,  92,  93,  94,  98,  99, 100, 101, 102, 103,  104, 105, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116,
+# 117, 118, 119, 120, 121, 123, 124, 125, 126, 127, 130, 131, 133, 135, 136, 137, 139, 140, 141, 142, 143]
+idlist = [40]
+if order == -1: idlist = np.flip(idlist)
+for k in idlist:
     for t in range(5):
         tt = np.copy(t)
-        savefilename = '/reg/d/psdm/tmo/tmox51020/results/paris/recon/torch_Jul29_112/pytorchrecon_'+str(k)+'_Up'+str(Ups[0])+'_seed'+str(tt)+'.npy'
+        savefilename = '/reg/d/psdm/tmo/tmox51020/results/paris/recon/torch_Aug24_131/pytorchrecon_'+str(k)+'_Up'+str(Ups[0])+'_seed'+str(tt)+'.npy'
         #savefilename = '/reg/d/psdm/tmo/tmox51020/results/paris/recon/torch_Jan12_cal/pytorchrecon_'+str(k)+'_Up'+str(Ups[0])+'_seed'+str(tt)+'.npy'
         if os.path.isfile(savefilename):
             print(savefilename+' exists')
@@ -316,5 +347,5 @@ for k in range(mdat.shape[0]):
             outdict['thresh'] = thresh
             
             np.save(savefilename, outdict)
-            print('one done, eshift 1 for exp, 0 for sim')
+            print('one done, new indexes for run 127')
 

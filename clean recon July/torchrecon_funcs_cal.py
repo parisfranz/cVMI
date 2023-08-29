@@ -40,7 +40,7 @@ def loss_M(M,Q,Nb,Bpr,Bpi,thresh):
     return (torch.sum(torch.abs(M.view([1,64**2])-Mgr)**2))
     #return (torch.sum(torch.abs(M.reshape([1,64**2])-Mgr)))**2
 
-def loss_M_half(M,Q,Nb,Bpr,Bpi):
+def loss_M_half(M,Q,Nb,Bpr,Bpi,thresh):
     Qr=Q[0][0:Nb]
     Qr=Qr[None,:]
     Qi=Q[0][Nb:2*Nb-1]
@@ -58,12 +58,13 @@ def loss_M_half(M,Q,Nb,Bpr,Bpi):
     #Mgr[Mgr<0.00037] = 0
     Mgr[Mgr<0.00032] = 0
     Mgr = Mgr/torch.sum(Mgr)
-    #image - scale*bkg
-    # scale=Q[0][-1]
-    # M=M-scale*bkg
+    Mgr[Mgr<thresh] = 0
+    
     M[M<0]=0
     M = M[:32,:]
     M = M/torch.sum(M)
+    M = M*5000
+    Mgr = Mgr*5000
     return (torch.sum(torch.abs(M-Mgr)**2))
 
 def loss_M_32(M,Q,Nb,Bpr,Bpi):
@@ -110,7 +111,8 @@ def loss_w(spec, Q, alphaw_r, alphaw_i, Nb):
     EwEwlook = EwEwlook/torch.max(EwEwlook)
     #EwEwlook = EwEwlook*12.5
     #spec = spec*12.5
-    return torch.sum(torch.abs(14*(EwEwlook-spec))**2) + torch.sum(torch.abs(2*(EwEwlook-spec)/(spec+0.1))**2)
+    return torch.sum(torch.abs(14*(EwEwlook-spec))**2) + torch.sum(torch.abs(10*(EwEwlook-spec)/(spec+0.1))**2)
+    #return torch.sum(torch.abs(14*(EwEwlook-spec))**2) + torch.sum(torch.abs(2*(EwEwlook-spec)/(spec+0.1))**2)
 
 def loss_w_w0(spec, Q, alphaw_r, alphaw_i, Nb):
     #spec is already smoothed, baseline subtracted and zero thresholded
@@ -193,9 +195,9 @@ def loss_tot_32(M,Q,Nb,Bpr,Bpi,spec, alphaw_r, alphaw_i,w1,w2):
     return w1*loss_M_32(M,Q,Nb,Bpr,Bpi)+w2*loss_w(spec, Q, alphaw_r, alphaw_i,Nb)#+w3*loss_w_smooth(Q, alphaw_r, alphaw_i,Nb)
 
 
-def loss_tot_half(M,Q,Nb,Bpr,Bpi,spec, alphaw_r, alphaw_i,w1,w2,w3):
+def loss_tot_half(M,Q,Nb,Bpr,Bpi,spec, alphaw_r, alphaw_i,w1,w2,w3,thresh):
 #     print(w1*loss_M(M,Q,Nb,Bpr,Bpi),w2*loss_t(Q,alpha_vn,ts,tn,wm,Nt,Nw,Nb),w3*loss_w(Q,alpha_vn,ts,tn,wm,Nt,Nw,Nb),loss_Q(Q))
-    return 0.1*loss_Q(Q,Nb)+w1*loss_M_half(M,Q,Nb,Bpr,Bpi)+w2*loss_w(spec, Q, alphaw_r, alphaw_i,Nb)+w3*loss_w_smooth(Q, alphaw_r, alphaw_i,Nb)
+    return 0.1*loss_Q(Q,Nb)+w1*loss_M_half(M,Q,Nb,Bpr,Bpi,thresh)+w2*loss_w(spec, Q, alphaw_r, alphaw_i,Nb)#+w3*loss_w_smooth(Q, alphaw_r, alphaw_i,Nb)
 
 # def loss_half(M,Q,Nb,Bpr,Bpi,spec, alphaw_r, alphaw_i,w1,w2):
 #     return w1*loss_M_half(M,Q,Nb,Bpr,Bpi)+w2*loss_w(spec, Q, alphaw_r, alphaw_i,Nb)
