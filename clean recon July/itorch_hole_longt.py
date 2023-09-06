@@ -304,7 +304,7 @@ for k in idlist:
             costQ = []
             eps = []
             M_wght = 1
-            Spec_wght = 15 #15 #12 #1 #0.75 #0.8
+            Spec_wght = 15.2 #15 #12 #1 #0.75 #0.8
             Smooth_wght = 0.00001
             for epoch in range(int(n_epochs)):
                 #M,Spec, Smooth

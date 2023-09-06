@@ -158,6 +158,7 @@ def loss_t_sim(fftin, Q, alphat_r, alphat_i, Nb):
     EtEtlook = EtEtlook/torch.max(EtEtlook)
     #EwEwlook = EwEwlook*12.5
     #spec = spec*12.5
+    fftin = fftin/torch.max(fftin)
     return torch.sum(torch.abs(14*(EtEtlook-fftin))**2) + torch.sum(torch.abs(7*(EtEtlook-fftin)/(fftin+0.1))**2)
 
 def loss_w_w0(spec, Q, alphaw_r, alphaw_i, Nb):
@@ -228,7 +229,7 @@ def loss_tot(M,Q,Nb,Bpr,Bpi,spec, alphaw_r, alphaw_i,w1,w2,w3):
     return 0.1*loss_Q(Q,Nb)+w1*loss_M(M,Q,Nb,Bpr,Bpi)+w2*loss_w(spec, Q, alphaw_r, alphaw_i,Nb)+w3*loss_w_smooth(Q, alphaw_r, alphaw_i,Nb)
 
 def loss_tot_sim(fftinput, Q, alphat_r, alphat_i, spec,  alphaw_r, alphaw_i, Nb):
-    return loss_t_sim(fftinput, Q, alphat_r, alphat_i, Nb)+loss_w_sim(spec, Q, alphaw_r, alphaw_i, Nb)
+    return loss_t_sim(fftinput, Q, alphat_r, alphat_i, Nb)+5*loss_w_sim(spec, Q, alphaw_r, alphaw_i, Nb)
 
 
 def loss_tot_noQ(M,Q,Nb,Bpr,Bpi,spec, alphaw_r, alphaw_i,w1,w2,w3,thresh):
