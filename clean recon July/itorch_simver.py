@@ -55,8 +55,10 @@ thresh = 0.0006 #0.0008 #0.00037 #0.0005
 # specdat = np.load('/cds/home/p/paris/reconVMI_clean/recon X510 Dec/specs_sm_Jul12_0.npy', allow_pickle = True)[()]
 
 
-mdatname='/cds/home/p/paris/reconVMI_clean/recon X510 Dec/Ms_Aug21_131.npy'
-specdatname ='/cds/home/p/paris/reconVMI_clean/recon X510 Dec/specs_Aug21_131.npy'
+# mdatname='/cds/home/p/paris/reconVMI_clean/recon X510 Dec/Ms_Aug31_0.npy'
+# specdatname ='/cds/home/p/paris/reconVMI_clean/recon X510 Dec/specs_Aug31_0.npy'
+mdatname='/cds/home/p/paris/reconVMI_clean/recon X510 Dec/Ms_Sep6_0.npy'
+specdatname ='/cds/home/p/paris/reconVMI_clean/recon X510 Dec/specs_Sep6_0.npy'
 
 #basesdir = '/reg/d/psdm/tmo/tmox51020/results/paris/circularpol_vNbases_dipole_K5/'
 

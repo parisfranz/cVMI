@@ -111,8 +111,55 @@ def loss_w(spec, Q, alphaw_r, alphaw_i, Nb):
     EwEwlook = EwEwlook/torch.max(EwEwlook)
     #EwEwlook = EwEwlook*12.5
     #spec = spec*12.5
-    return torch.sum(torch.abs(14*(EwEwlook-spec))**2) + torch.sum(torch.abs(10*(EwEwlook-spec)/(spec+0.1))**2)
+    return torch.sum(torch.abs(14*(EwEwlook-spec))**2) + torch.sum(torch.abs(7*(EwEwlook-spec)/(spec+0.1))**2)
     #return torch.sum(torch.abs(14*(EwEwlook-spec))**2) + torch.sum(torch.abs(2*(EwEwlook-spec)/(spec+0.1))**2)
+    
+    
+def loss_w_sim(spec, Q, alphaw_r, alphaw_i, Nb):
+    #spec is already smoothed, baseline subtracted and zero thresholded
+    Qr=Q[0][0:Nb]
+    Qr=Qr[None,:] #[1x36]
+    Qi=Q[0][Nb:2*Nb-1]
+    Qi=Qi[None,:]
+    x=Tensor([0])
+    Qi=torch.cat([x[:,None],Qi],1)
+    Qrt=torch.transpose(Qr,0,1)
+    Qit=torch.transpose(Qi,0,1)
+    eVshift = 0 #Q[0][-1]
+    eVshift_idx = int(eVshift*50)
+    EwEw = (torch.mm(Qr,alphaw_r)-torch.mm(Qi,alphaw_i))**2+(torch.mm(Qr,alphaw_i)+torch.mm(Qi,alphaw_r))**2
+    #EwEwlook = Tensor(EwEw[0][1340-eVshift_idx:-1340-eVshift_idx])
+    EwEwlook = Tensor(EwEw[0][1200:-1200])
+    EwEwlook=EwEwlook[None,:]
+    EwEwlook = EwEwlook/torch.max(EwEwlook)
+    #EwEwlook = EwEwlook*12.5
+    #spec = spec*12.5
+    return torch.sum(torch.abs(14*(EwEwlook-spec))**2) + torch.sum(torch.abs(7*(EwEwlook-spec)/(spec+0.1))**2)
+
+
+    
+    
+def loss_t_sim(fftin, Q, alphat_r, alphat_i, Nb):
+    #spec is already smoothed, baseline subtracted and zero thresholded
+    Qr=Q[0][0:Nb]
+    Qr=Qr[None,:] #[1x36]
+    Qi=Q[0][Nb:2*Nb-1]
+    Qi=Qi[None,:]
+    x=Tensor([0])
+    Qi=torch.cat([x[:,None],Qi],1)
+    Qrt=torch.transpose(Qr,0,1)
+    Qit=torch.transpose(Qi,0,1)
+    eVshift = 0 #Q[0][-1]
+    eVshift_idx = int(eVshift*50)
+    EtEt = (torch.mm(Qr,alphat_r)-torch.mm(Qi,alphat_i))**2+(torch.mm(Qr,alphat_i)+torch.mm(Qi,alphat_r))**2
+    #EwEwlook = Tensor(EwEw[0][1340-eVshift_idx:-1340-eVshift_idx])
+    EtEtlook = Tensor(EtEt[0])
+    EtEtlook=EtEtlook[None,:]
+    EtEtlook = EtEtlook/torch.max(EtEtlook)
+    #EwEwlook = EwEwlook*12.5
+    #spec = spec*12.5
+    fftin = fftin/torch.max(fftin)
+    return torch.sum(torch.abs(14*(EtEtlook-fftin))**2) + torch.sum(torch.abs(7*(EtEtlook-fftin)/(fftin+0.1))**2)
 
 def loss_w_w0(spec, Q, alphaw_r, alphaw_i, Nb):
     #spec is already smoothed, baseline subtracted and zero thresholded
@@ -180,6 +227,10 @@ def loss_Q(Q, Nb):
 def loss_tot(M,Q,Nb,Bpr,Bpi,spec, alphaw_r, alphaw_i,w1,w2,w3):
 #     print(w1*loss_M(M,Q,Nb,Bpr,Bpi),w2*loss_t(Q,alpha_vn,ts,tn,wm,Nt,Nw,Nb),w3*loss_w(Q,alpha_vn,ts,tn,wm,Nt,Nw,Nb),loss_Q(Q))
     return 0.1*loss_Q(Q,Nb)+w1*loss_M(M,Q,Nb,Bpr,Bpi)+w2*loss_w(spec, Q, alphaw_r, alphaw_i,Nb)+w3*loss_w_smooth(Q, alphaw_r, alphaw_i,Nb)
+
+def loss_tot_sim(fftinput, Q, alphat_r, alphat_i, spec,  alphaw_r, alphaw_i, Nb):
+    return loss_t_sim(fftinput, Q, alphat_r, alphat_i, Nb)+5*loss_w_sim(spec, Q, alphaw_r, alphaw_i, Nb)
+
 
 def loss_tot_noQ(M,Q,Nb,Bpr,Bpi,spec, alphaw_r, alphaw_i,w1,w2,w3,thresh):
 #     print(w1*loss_M(M,Q,Nb,Bpr,Bpi),w2*loss_t(Q,alpha_vn,ts,tn,wm,Nt,Nw,Nb),w3*loss_w(Q,alpha_vn,ts,tn,wm,Nt,Nw,Nb),loss_Q(Q))
